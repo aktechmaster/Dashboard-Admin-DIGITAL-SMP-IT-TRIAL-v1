@@ -3,142 +3,335 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard Full - Aplikasi DIGITAL</title>
+  <title>Sistem Informasi Administrasi Sekolah - DIGITAL</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-10">
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex">
 
-  <!-- TOP NAVBAR -->
-  <header class="bg-indigo-900 text-white shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-50">
-    <div class="flex items-center gap-3">
-      <div class="bg-indigo-600 p-2 rounded-lg font-bold">AD</div>
+  <!-- SIDEBAR LEFT -->
+  <aside class="w-64 bg-slate-800 text-slate-300 flex flex-col shrink-0 min-h-screen shadow-xl">
+    <!-- Brand Logo -->
+    <div class="h-16 bg-slate-900 flex items-center px-4 border-b border-slate-700 gap-3">
+      <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold text-lg">
+        <i class="fa-solid fa-school"></i>
+      </div>
       <div>
-        <h1 class="text-xl font-bold tracking-wide">Aplikasi Master DIGITAL</h1>
-        <p class="text-xs text-indigo-200">Panel Kontrol Database Admin</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-3">
-      <span id="statStatus" class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">Connecting...</span>
-      <button onclick="loadData()" class="bg-indigo-700 hover:bg-indigo-600 px-4 py-2 rounded-lg text-sm transition font-medium">🔄 Refresh</button>
-    </div>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-7xl mx-auto p-6 space-y-6">
-
-    <!-- METRIC STATS -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-xs font-semibold text-slate-500">RATA-RATA KEHADIRAN</p>
-        <h3 id="statRataRata" class="text-2xl font-extrabold text-emerald-600 mt-1">0%</h3>
-      </div>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-xs font-semibold text-slate-500">PERSENTASE PENGISIAN</p>
-        <h3 id="statPersenIsi" class="text-2xl font-extrabold text-indigo-600 mt-1">0%</h3>
-      </div>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-xs font-semibold text-slate-500">TOTAL SISWA</p>
-        <h3 id="statSiswa" class="text-2xl font-extrabold text-slate-800 mt-1">0</h3>
-      </div>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-xs font-semibold text-slate-500">TOTAL GURU & STAF</p>
-        <h3 id="statGuru" class="text-2xl font-extrabold text-slate-800 mt-1">0</h3>
+        <h1 class="font-bold text-white text-sm tracking-wide leading-tight">SI-DIGITAL</h1>
+        <p class="text-[10px] text-slate-400">Master Database Sekolah</p>
       </div>
     </div>
 
-    <!-- TAB NAVIGATION BAR -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 flex gap-2 overflow-x-auto">
-      <button onclick="switchTab('rekap')" id="tab-rekap" class="tab-btn bg-indigo-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">📊 Rekap Kelas</button>
-      <button onclick="switchTab('siswa')" id="tab-siswa" class="tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition">👥 Data Siswa</button>
-      <button onclick="switchTab('guru')" id="tab-guru" class="tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition">👨‍🏫 Biodata Guru</button>
-      <button onclick="switchTab('jadwal')" id="tab-jadwal" class="tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition">📅 Jadwal Mengajar</button>
-    </div>
+    <!-- Navigation List -->
+    <nav class="flex-1 px-3 py-4 space-y-6 overflow-y-auto text-xs font-medium">
+      
+      <!-- MENU: DASHBOARD -->
+      <div>
+        <button onclick="showPage('beranda')" id="nav-beranda" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-md bg-indigo-600 text-white font-semibold">
+          <i class="fa-solid fa-house w-4 text-center"></i> Beranda
+        </button>
+      </div>
 
-    <!-- TAB 1: REKAP KELAS -->
-    <div id="content-rekap" class="tab-content bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-slate-800">📊 Rekapitulasi Kelas & Kehadiran</h2>
-        <input type="text" onkeyup="filterTable('tableRekap', this.value)" placeholder="Cari Kelas..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-48">
+      <!-- GROUP 1: MONITORING & JURNAL -->
+      <div class="space-y-1">
+        <p class="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">MONITORING & JURNAL</p>
+        <button onclick="showPage('rekap')" id="nav-rekap" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-chart-pie w-4 text-center text-cyan-400"></i> Rekap Kelas
+        </button>
+        <button onclick="showPage('jurnal-harian')" id="nav-jurnal-harian" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-book-open w-4 text-center text-emerald-400"></i> Jurnal Harian
+        </button>
+        <button onclick="showPage('jurnal-bulanan')" id="nav-jurnal-bulanan" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-calendar-check w-4 text-center text-amber-400"></i> Jurnal Bulanan
+        </button>
+        <button onclick="showPage('absensi-piket')" id="nav-absensi-piket" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-clipboard-user w-4 text-center text-rose-400"></i> Absensi & Piket
+        </button>
       </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse" id="tableRekap">
-          <thead>
-            <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
-              <th class="p-3">Kelas</th>
-              <th class="p-3 text-center">Jumlah Isi (Jurnal)</th>
-              <th class="p-3 text-center">Total Pertemuan Sem II</th>
-              <th class="p-3 text-right">Rata-Rata Kehadiran</th>
-            </tr>
-          </thead>
-          <tbody class="text-sm divide-y divide-slate-100" id="bodyRekap">
-            <tr><td colspan="4" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- TAB 2: DATA SISWA -->
-    <div id="content-siswa" class="tab-content hidden bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-slate-800">👥 Data Induk Siswa</h2>
-        <input type="text" onkeyup="filterTable('tableSiswa', this.value)" placeholder="Cari Nama/NISN/Kelas..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-64">
+      <!-- GROUP 2: KELOLA DATA -->
+      <div class="space-y-1">
+        <p class="px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">KELOLA DATA</p>
+        <button onclick="showPage('gtk')" id="nav-gtk" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-chalkboard-user w-4 text-center text-indigo-400"></i> Data GTK / Guru
+        </button>
+        <button onclick="showPage('siswa')" id="nav-siswa" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-user-graduate w-4 text-center text-yellow-400"></i> Peserta Didik
+        </button>
+        <button onclick="showPage('jadwal')" id="nav-jadwal" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-clock w-4 text-center text-teal-400"></i> Jadwal Pelajaran
+        </button>
+        <button onclick="showPage('users')" id="nav-users" class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition">
+          <i class="fa-solid fa-users-gear w-4 text-center text-purple-400"></i> User & Akun
+        </button>
       </div>
-      <div class="overflow-x-auto max-h-[500px]">
-        <table class="w-full text-left border-collapse" id="tableSiswa">
-          <thead class="sticky top-0 bg-slate-50 shadow-sm">
-            <tr class="text-xs text-slate-500 uppercase border-b border-slate-200">
-              <th class="p-3">Kelas</th>
-              <th class="p-3">Nama Siswa</th>
-              <th class="p-3">NISN / NIS</th>
-              <th class="p-3">L/P</th>
-              <th class="p-3">TTL</th>
-              <th class="p-3">Nama Ayah</th>
-            </tr>
-          </thead>
-          <tbody class="text-sm divide-y divide-slate-100" id="bodySiswa">
-            <tr><td colspan="6" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- TAB 3: BIODATA GURU -->
-    <div id="content-guru" class="tab-content hidden bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-slate-800">👨‍🏫 Biodata Guru & Staf</h2>
-        <input type="text" onkeyup="filterTable('tableGuru', this.value)" placeholder="Cari Guru..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-48">
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse" id="tableGuru">
-          <thead>
-            <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
-              <th class="p-3">Nama Lengkap</th>
-              <th class="p-3">Jabatan</th>
-              <th class="p-3">Wali Kelas</th>
-              <th class="p-3">Pembina Ekstra</th>
-              <th class="p-3">NIP / NUPTK</th>
-            </tr>
-          </thead>
-          <tbody class="text-sm divide-y divide-slate-100" id="bodyGuru">
-            <tr><td colspan="5" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </nav>
+  </aside>
 
-    <!-- TAB 4: JADWAL MENGAJAR -->
-    <div id="content-jadwal" class="tab-content hidden bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-      <h2 class="text-lg font-bold text-slate-800 mb-4">📅 Jadwal Mengajar Guru</h2>
-      <div id="containerJadwal" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <p class="text-slate-400 text-sm">Memuat data jadwal...</p>
-      </div>
-    </div>
+  <!-- MAIN CONTENT AREA -->
+  <div class="flex-1 flex flex-col min-w-0 min-h-screen">
 
-  </main>
+    <!-- TOPBAR -->
+    <header class="h-16 bg-white border-b border-slate-200 px-6 flex justify-between items-center shadow-sm sticky top-0 z-40">
+      <div class="flex items-center gap-4">
+        <h2 id="headerTitle" class="font-bold text-slate-700 text-base">SISTEM INFORMASI ADMINISTRASI SEKOLAH</h2>
+      </div>
+      <div class="flex items-center gap-4">
+        <span id="statStatus" class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">Syncing...</span>
+        <button onclick="loadData()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-md text-xs font-bold transition flex items-center gap-1.5">
+          <i class="fa-solid fa-rotate"></i> Refresh Data
+        </button>
+        <div class="flex items-center gap-2 border-l border-slate-200 pl-4">
+          <i class="fa-solid fa-circle-user text-2xl text-slate-400"></i>
+          <span class="text-xs font-semibold text-slate-700">Administrator</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTAINER BODY -->
+    <main class="p-6 space-y-6 flex-1 overflow-y-auto">
+
+      <!-- ========================================== -->
+      <!-- PAGE: BERANDA (OVERVIEW DASHBOARD) -->
+      <!-- ========================================== -->
+      <div id="page-beranda" class="page-content space-y-6">
+
+        <!-- CARD ROW 1: REKAP DATA SEKOLAH -->
+        <div>
+          <h3 class="text-base font-bold text-slate-700 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-slate-500"></i> Rekap Data Sekolah
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            <!-- Card Guru -->
+            <div class="bg-cyan-500 rounded-lg shadow-sm text-white overflow-hidden flex flex-col justify-between">
+              <div class="p-4 flex justify-between items-center">
+                <div>
+                  <h4 id="boxGuru" class="text-3xl font-extrabold">0</h4>
+                  <p class="text-xs font-medium opacity-90 mt-1">Jumlah Guru</p>
+                </div>
+                <i class="fa-solid fa-chalkboard-user text-5xl opacity-30"></i>
+              </div>
+              <div class="bg-cyan-600 px-4 py-1.5 text-[11px] font-semibold flex justify-between items-center cursor-pointer hover:bg-cyan-700" onclick="showPage('gtk')">
+                <span>Lihat Detail</span> <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            </div>
+
+            <!-- Card Tendik -->
+            <div class="bg-emerald-500 rounded-lg shadow-sm text-white overflow-hidden flex flex-col justify-between">
+              <div class="p-4 flex justify-between items-center">
+                <div>
+                  <h4 id="boxKelas" class="text-3xl font-extrabold">0</h4>
+                  <p class="text-xs font-medium opacity-90 mt-1">Total Rombel Kelas</p>
+                </div>
+                <i class="fa-solid fa-door-open text-5xl opacity-30"></i>
+              </div>
+              <div class="bg-emerald-600 px-4 py-1.5 text-[11px] font-semibold flex justify-between items-center cursor-pointer hover:bg-emerald-700" onclick="showPage('rekap')">
+                <span>Lihat Detail</span> <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            </div>
+
+            <!-- Card Peserta Didik -->
+            <div class="bg-amber-500 rounded-lg shadow-sm text-white overflow-hidden flex flex-col justify-between">
+              <div class="p-4 flex justify-between items-center">
+                <div>
+                  <h4 id="boxSiswa" class="text-3xl font-extrabold">0</h4>
+                  <p class="text-xs font-medium opacity-90 mt-1">Peserta Didik</p>
+                </div>
+                <i class="fa-solid fa-user-graduate text-5xl opacity-30"></i>
+              </div>
+              <div class="bg-amber-600 px-4 py-1.5 text-[11px] font-semibold flex justify-between items-center cursor-pointer hover:bg-amber-700" onclick="showPage('siswa')">
+                <span>Lihat Detail</span> <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            </div>
+
+            <!-- Card Rata Rata Kehadiran -->
+            <div class="bg-rose-500 rounded-lg shadow-sm text-white overflow-hidden flex flex-col justify-between">
+              <div class="p-4 flex justify-between items-center">
+                <div>
+                  <h4 id="boxPersen" class="text-3xl font-extrabold">0%</h4>
+                  <p class="text-xs font-medium opacity-90 mt-1">Kehadiran Kelas</p>
+                </div>
+                <i class="fa-solid fa-chart-line text-5xl opacity-30"></i>
+              </div>
+              <div class="bg-rose-600 px-4 py-1.5 text-[11px] font-semibold flex justify-between items-center cursor-pointer hover:bg-rose-700" onclick="showPage('rekap')">
+                <span>Lihat Detail</span> <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SPLIT COLUMNS -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- LEFT COLUMN: STATUS & QUICK REKAP (2 Cols) -->
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-4">
+              <div class="border-b border-slate-100 pb-3 mb-4 flex justify-between items-center">
+                <h3 class="font-bold text-slate-700 text-sm"><i class="fa-solid fa-bullhorn text-indigo-500 mr-2"></i> Ringkasan Rekapitulasi Kelas</h3>
+                <span id="selisihInfo" class="bg-indigo-50 text-indigo-700 text-xs px-2.5 py-1 rounded font-semibold">Selisih: -</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-slate-50 text-slate-500 uppercase border-b border-slate-200">
+                    <tr>
+                      <th class="p-2.5">Nama Kelas</th>
+                      <th class="p-2.5 text-center">Jumlah Isi</th>
+                      <th class="p-2.5 text-center">Total Pertemuan</th>
+                      <th class="p-2.5 text-right">Kehadiran (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="homeBodyRekap" class="divide-y divide-slate-100">
+                    <tr><td colspan="4" class="p-3 text-center text-slate-400">Memuat data...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: TEAM TEKNIS & INFO (1 Col) -->
+          <div class="space-y-6">
+            <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-4">
+              <h3 class="font-bold text-slate-700 text-sm border-b border-slate-100 pb-3 mb-3">
+                <i class="fa-solid fa-headset text-indigo-500 mr-2"></i> Team Teknis
+              </h3>
+              <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-md border border-slate-100">
+                <div class="bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm">
+                  AD
+                </div>
+                <div>
+                  <h4 class="font-bold text-xs text-slate-800">Super Administrator</h4>
+                  <p class="text-[11px] text-slate-500">Database Master DIGITAL</p>
+                  <span class="inline-block mt-1 bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded">Active System</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+      <!-- PAGE: REKAP KELAS -->
+      <!-- ========================================== -->
+      <div id="page-rekap" class="page-content hidden bg-white p-5 rounded-lg border border-slate-200 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-slate-800 text-base">📊 Monitoring Rekapitulasi Kelas</h3>
+          <input type="text" onkeyup="filterTable('tableRekapFull', this.value)" placeholder="Cari Kelas..." class="border border-slate-300 px-3 py-1.5 rounded-md text-xs w-52">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse" id="tableRekapFull">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
+              <tr>
+                <th class="p-3">Kelas</th>
+                <th class="p-3 text-center">Jumlah Isi</th>
+                <th class="p-3 text-center">Total Pertemuan Sem II</th>
+                <th class="p-3 text-right">Rata-Rata Kehadiran</th>
+              </tr>
+            </thead>
+            <tbody id="bodyRekapFull" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- PAGE: PESERTA DIDIK -->
+      <!-- ========================================== -->
+      <div id="page-siswa" class="page-content hidden bg-white p-5 rounded-lg border border-slate-200 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-slate-800 text-base">👥 Data Peserta Didik</h3>
+          <input type="text" onkeyup="filterTable('tableSiswaFull', this.value)" placeholder="Cari Nama/NISN/Kelas..." class="border border-slate-300 px-3 py-1.5 rounded-md text-xs w-64">
+        </div>
+        <div class="overflow-x-auto max-h-[550px]">
+          <table class="w-full text-left text-xs border-collapse" id="tableSiswaFull">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase sticky top-0">
+              <tr>
+                <th class="p-3">Kelas</th>
+                <th class="p-3">Nama Lengkap</th>
+                <th class="p-3">NISN / NIS</th>
+                <th class="p-3">L/P</th>
+                <th class="p-3">Tempat, Tgl Lahir</th>
+                <th class="p-3">Nama Ayah</th>
+              </tr>
+            </thead>
+            <tbody id="bodySiswaFull" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- PAGE: DATA GTK / GURU -->
+      <!-- ========================================== -->
+      <div id="page-gtk" class="page-content hidden bg-white p-5 rounded-lg border border-slate-200 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-slate-800 text-base">👨‍🏫 Data GTK (Guru & Staf)</h3>
+          <input type="text" onkeyup="filterTable('tableGtkFull', this.value)" placeholder="Cari Nama Guru..." class="border border-slate-300 px-3 py-1.5 rounded-md text-xs w-52">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse" id="tableGtkFull">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
+              <tr>
+                <th class="p-3">Nama Lengkap</th>
+                <th class="p-3">Jabatan</th>
+                <th class="p-3">Wali Kelas</th>
+                <th class="p-3">Pembina Ekstra</th>
+                <th class="p-3">NIP / NUPTK</th>
+              </tr>
+            </thead>
+            <tbody id="bodyGtkFull" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PAGE STUB DUMMY DENGAN PESAN PERSIAPAN MENU -->
+      <div id="page-jurnal-harian" class="page-content hidden bg-white p-6 rounded-lg border border-slate-200 shadow-sm text-center py-12">
+        <i class="fa-solid fa-book-open text-4xl text-slate-300 mb-2"></i>
+        <h4 class="font-bold text-slate-700">Modul Jurnal Harian</h4>
+        <p class="text-xs text-slate-400 mt-1">Data Jurnal Harian dimuat langsung dari Sheet Jurnal Harian.</p>
+      </div>
+
+      <div id="page-jurnal-bulanan" class="page-content hidden bg-white p-6 rounded-lg border border-slate-200 shadow-sm text-center py-12">
+        <i class="fa-solid fa-calendar-check text-4xl text-slate-300 mb-2"></i>
+        <h4 class="font-bold text-slate-700">Modul Jurnal Bulanan</h4>
+        <p class="text-xs text-slate-400 mt-1">Data Jurnal Bulanan dimuat dari Sheet Jurnal fix & Sheet Jurnal.</p>
+      </div>
+
+      <div id="page-absensi-piket" class="page-content hidden bg-white p-6 rounded-lg border border-slate-200 shadow-sm text-center py-12">
+        <i class="fa-solid fa-clipboard-user text-4xl text-slate-300 mb-2"></i>
+        <h4 class="font-bold text-slate-700">Modul Absensi & Piket</h4>
+        <p class="text-xs text-slate-400 mt-1">Rekapitulasi Absensi dan Piket Guru.</p>
+      </div>
+
+      <div id="page-jadwal" class="page-content hidden bg-white p-5 rounded-lg border border-slate-200 shadow-sm space-y-4">
+        <h3 class="font-bold text-slate-800 text-base">📅 Jadwal Mengajar Guru</h3>
+        <div id="containerJadwalCards" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+      </div>
+
+      <div id="page-users" class="page-content hidden bg-white p-5 rounded-lg border border-slate-200 shadow-sm space-y-4">
+        <h3 class="font-bold text-slate-800 text-base">🔑 User & Akun Terdaftar</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse" id="tableUsers">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase">
+              <tr>
+                <th class="p-3">Nama</th>
+                <th class="p-3">Username</th>
+                <th class="p-3">Jabatan</th>
+              </tr>
+            </thead>
+            <tbody id="bodyUsers" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
 
   <!-- JAVASCRIPT FETCH INTEGRATION -->
   <script>
-    // ⚠️ GANTI DENGAN URL EXEC WEB APP KAMU
+    // ⚠️ MASUKKAN URL EXEC DEPLOYMENT APPS SCRIPT KAMU DI SINI
     const API_URL = "https://script.google.com/macros/s/AKfycbxjOtLl18ZvhzJnvGYGBiOki7UmjjeinUdFecOtBVqYgY6BrgVvMXgZKHNRouSoJgA2ew/exec";
 
     let globalData = {};
@@ -152,12 +345,22 @@
         const response = await fetch(API_URL);
         globalData = await response.json();
 
-        // Render Semua Modul
-        renderMetrics();
-        renderRekapKelas();
+        // Render Metric Boxes
+        document.getElementById("boxGuru").innerText = globalData.biodata ? Object.keys(globalData.biodata).length : 0;
+        document.getElementById("boxKelas").innerText = globalData.rekapKelas ? Object.keys(globalData.rekapKelas).length : 0;
+        document.getElementById("boxSiswa").innerText = globalData.dataSiswa ? globalData.dataSiswa.length : 0;
+        
+        if (globalData.ringkasanRekap) {
+          document.getElementById("boxPersen").innerText = globalData.ringkasanRekap.totalRataRata || "0%";
+          document.getElementById("selisihInfo").innerText = "Selisih: " + (globalData.ringkasanRekap.selisihJurnal || "-");
+        }
+
+        // Render Tables
+        renderRekap();
         renderSiswa();
-        renderGuru();
+        renderGTK();
         renderJadwal();
+        renderUsers();
 
         statusEl.className = "px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full";
         statusEl.innerText = "Online";
@@ -168,113 +371,116 @@
       }
     }
 
-    function renderMetrics() {
-      if (globalData.ringkasanRekap) {
-        document.getElementById("statRataRata").innerText = globalData.ringkasanRekap.totalRataRata || "0%";
-        document.getElementById("statPersenIsi").innerText = globalData.ringkasanRekap.persenIsi || "0%";
-      }
-      document.getElementById("statSiswa").innerText = globalData.dataSiswa ? globalData.dataSiswa.length : 0;
-      document.getElementById("statGuru").innerText = globalData.biodata ? Object.keys(globalData.biodata).length : 0;
-    }
-
-    function renderRekapKelas() {
-      const tbody = document.getElementById("bodyRekap");
-      tbody.innerHTML = "";
+    function renderRekap() {
+      const homeTbody = document.getElementById("homeBodyRekap");
+      const fullTbody = document.getElementById("bodyRekapFull");
+      homeTbody.innerHTML = "";
+      fullTbody.innerHTML = "";
 
       if (!globalData.rekapKelas) return;
 
       for (const [kelas, item] of Object.entries(globalData.rekapKelas)) {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 transition";
-        tr.innerHTML = `
-          <td class="p-3 font-semibold text-slate-700">${kelas}</td>
-          <td class="p-3 text-center">${item.jumlahInput || '0'}</td>
-          <td class="p-3 text-center">${item.totalPertemuan || '0'}</td>
-          <td class="p-3 text-right font-bold text-indigo-600">${item.tampilan || item.persen}</td>
+        const row = `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-2.5 font-bold text-slate-700">${kelas}</td>
+            <td class="p-2.5 text-center">${item.jumlahInput || '0'}</td>
+            <td class="p-2.5 text-center">${item.totalPertemuan || '0'}</td>
+            <td class="p-2.5 text-right font-bold text-indigo-600">${item.tampilan || item.persen}</td>
+          </tr>
         `;
-        tbody.appendChild(tr);
+        homeTbody.innerHTML += row;
+        fullTbody.innerHTML += row;
       }
     }
 
     function renderSiswa() {
-      const tbody = document.getElementById("bodySiswa");
+      const tbody = document.getElementById("bodySiswaFull");
       tbody.innerHTML = "";
-
       if (!globalData.dataSiswa) return;
 
       globalData.dataSiswa.forEach(s => {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 transition";
-        tr.innerHTML = `
-          <td class="p-3 font-semibold text-indigo-900">${s.kelas || '-'}</td>
-          <td class="p-3 font-medium text-slate-800">${s.nama || '-'}</td>
-          <td class="p-3 text-slate-500">${s.nisn || '-'} / ${s.nis || '-'}</td>
-          <td class="p-3">${s.jk || '-'}</td>
-          <td class="p-3 text-slate-500">${s.ttl || '-'}</td>
-          <td class="p-3 text-slate-600">${s.namaAyah || '-'}</td>
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 font-semibold text-indigo-900">${s.kelas || '-'}</td>
+            <td class="p-3 font-medium text-slate-800">${s.nama || '-'}</td>
+            <td class="p-3 text-slate-500">${s.nisn || '-'} / ${s.nis || '-'}</td>
+            <td class="p-3">${s.jk || '-'}</td>
+            <td class="p-3 text-slate-500">${s.ttl || '-'}</td>
+            <td class="p-3 text-slate-600">${s.namaAyah || '-'}</td>
+          </tr>
         `;
-        tbody.appendChild(tr);
       });
     }
 
-    function renderGuru() {
-      const tbody = document.getElementById("bodyGuru");
+    function renderGTK() {
+      const tbody = document.getElementById("bodyGtkFull");
       tbody.innerHTML = "";
-
       if (!globalData.biodata) return;
 
       for (const [nama, bio] of Object.entries(globalData.biodata)) {
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 transition";
-        tr.innerHTML = `
-          <td class="p-3 font-semibold text-slate-800">${nama}</td>
-          <td class="p-3 text-slate-600">${bio.jabatan || '-'}</td>
-          <td class="p-3 text-indigo-700 font-medium">${bio.waliKelas || '-'}</td>
-          <td class="p-3 text-slate-600">${bio.pembinaEkstra || '-'}</td>
-          <td class="p-3 text-slate-400 text-xs">${bio.nip || bio.nuptk || '-'}</td>
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 font-semibold text-slate-800">${nama}</td>
+            <td class="p-3 text-slate-600">${bio.jabatan || '-'}</td>
+            <td class="p-3 text-indigo-700 font-medium">${bio.waliKelas || '-'}</td>
+            <td class="p-3 text-slate-600">${bio.pembinaEkstra || '-'}</td>
+            <td class="p-3 text-slate-400 text-xs">${bio.nip || bio.nuptk || '-'}</td>
+          </tr>
         `;
-        tbody.appendChild(tr);
       }
     }
 
     function renderJadwal() {
-      const container = document.getElementById("containerJadwal");
+      const container = document.getElementById("containerJadwalCards");
       container.innerHTML = "";
-
       if (!globalData.jadwalMengajar) return;
 
       for (const [guru, hariObj] of Object.entries(globalData.jadwalMengajar)) {
-        const card = document.createElement("div");
-        card.className = "bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2";
-        
         let htmlHari = "";
         for (const [hari, kelasArr] of Object.entries(hariObj)) {
           if (kelasArr.length > 0) {
             htmlHari += `<div class="text-xs"><span class="font-bold text-indigo-800">${hari}:</span> ${kelasArr.join(', ')}</div>`;
           }
         }
-
-        card.innerHTML = `
-          <h4 class="font-bold text-slate-800 border-b border-slate-200 pb-1">${guru}</h4>
-          ${htmlHari || '<p class="text-xs text-slate-400">Tidak ada jadwal</p>'}
+        container.innerHTML += `
+          <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2">
+            <h4 class="font-bold text-slate-800 border-b border-slate-200 pb-1 text-xs">${guru}</h4>
+            ${htmlHari || '<p class="text-[11px] text-slate-400">Tidak ada jadwal</p>'}
+          </div>
         `;
-        container.appendChild(card);
       }
     }
 
-    // TAB SWITCHING
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.className = "tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition";
-      });
+    function renderUsers() {
+      const tbody = document.getElementById("bodyUsers");
+      tbody.innerHTML = "";
+      if (!globalData.users) return;
 
-      document.getElementById(`content-${tabName}`).classList.remove('hidden');
-      const activeBtn = document.getElementById(`tab-${tabName}`);
-      activeBtn.className = "tab-btn bg-indigo-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition";
+      globalData.users.forEach(u => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-3 font-semibold text-slate-800">${u.nama}</td>
+            <td class="p-3 text-indigo-700">${u.username}</td>
+            <td class="p-3 text-slate-600">${u.jabatan || '-'}</td>
+          </tr>
+        `;
+      });
     }
 
-    // SEARCH FILTER
+    // SIDEBAR PAGE SWITCHER
+    function showPage(pageId) {
+      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.className = "nav-item w-full flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-700 hover:text-white transition";
+      });
+
+      document.getElementById(`page-${pageId}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${pageId}`);
+      if (activeNav) {
+        activeNav.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-md bg-indigo-600 text-white font-semibold";
+      }
+    }
+
     function filterTable(tableId, query) {
       const q = query.toLowerCase();
       const rows = document.querySelectorAll(`#${tableId} tbody tr`);
