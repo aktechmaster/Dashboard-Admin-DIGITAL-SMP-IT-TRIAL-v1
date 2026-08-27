@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Aplikasi DIGITAL</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+
+  <!-- TOP NAVBAR -->
+  <header class="bg-indigo-900 text-white shadow-md px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="bg-indigo-600 p-2 rounded-lg font-bold">AD</div>
+      <h1 class="text-xl font-bold tracking-wide">Aplikasi Master DIGITAL - Admin Panel</h1>
+    </div>
+    <button onclick="loadData()" class="bg-indigo-700 hover:bg-indigo-600 px-4 py-2 rounded-lg text-sm transition font-medium flex items-center gap-2">
+      🔄 Refresh Data
+    </button>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto p-6 space-y-6">
+
+    <!-- STATISTIC CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-sm font-semibold text-slate-500">Total User Guru</p>
+        <h3 id="statGuru" class="text-3xl font-extrabold text-indigo-900 mt-1">...</h3>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-sm font-semibold text-slate-500">Total Siswa Terdaftar</p>
+        <h3 id="statSiswa" class="text-3xl font-extrabold text-indigo-900 mt-1">...</h3>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-sm font-semibold text-slate-500">Total Rombel Kelas</p>
+        <h3 id="statKelas" class="text-3xl font-extrabold text-indigo-900 mt-1">...</h3>
+      </div>
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-sm font-semibold text-slate-500">Status Database</p>
+        <span id="statStatus" class="inline-block mt-2 px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">Connecting...</span>
+      </div>
+    </div>
+
+    <!-- MAIN MONITORING SECTION -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- TABEL REKAP KELAS (2 Cols) -->
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold text-slate-800">📊 Rekapitulasi Kelas</h2>
+          <input type="text" id="searchKelas" onkeyup="filterKelas()" placeholder="Cari kelas..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-48 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse" id="tableRekap">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
+                <th class="p-3">Nama Kelas</th>
+                <th class="p-3 text-center">Jumlah Input</th>
+                <th class="p-3 text-right">Persentase</th>
+              </tr>
+            </thead>
+            <tbody class="text-sm divide-y divide-slate-100" id="bodyRekap">
+              <tr><td colspan="3" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RINGKASAN DATA SISWA (1 Col) -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+        <h2 class="text-lg font-bold text-slate-800 mb-4">👥 Rincian Siswa Per Kelas</h2>
+        <div class="overflow-y-auto max-h-[350px]">
+          <ul id="listRingkasanSiswa" class="divide-y divide-slate-100 text-sm">
+            <li class="py-2 text-slate-400">Memuat data siswa...</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT FETCH INTEGRATION -->
+  <script>
+    // ⚠️ GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT KAMU
+    const API_URL = "https://docs.google.com/spreadsheets/d/1KrZlBKQeCpag_p00OS-7qOSncO1oITqyShqb71zv-q4/edit?usp=sharing";
+
+    let globalData = {};
+
+    async function loadData() {
+      document.getElementById("statStatus").className = "inline-block mt-2 px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full";
+      document.getElementById("statStatus").innerText = "Syncing...";
+
+      try {
+        const response = await fetch(API_URL);
+        globalData = await response.json();
+
+        // Render Dashboard Metrics & Tables
+        renderMetrics();
+        renderRekapKelas();
+        renderRingkasanSiswa();
+
+        document.getElementById("statStatus").className = "inline-block mt-2 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full";
+        document.getElementById("statStatus").innerText = "Online";
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        document.getElementById("statStatus").className = "inline-block mt-2 px-3 py-1 bg-rose-100 text-rose-800 text-xs font-bold rounded-full";
+        document.getElementById("statStatus").innerText = "Error API";
+      }
+    }
+
+    function renderMetrics() {
+      document.getElementById("statGuru").innerText = globalData.users ? globalData.users.length : 0;
+      document.getElementById("statSiswa").innerText = globalData.dataSiswa ? globalData.dataSiswa.length : 0;
+      document.getElementById("statKelas").innerText = globalData.rekapKelas ? Object.keys(globalData.rekapKelas).length : 0;
+    }
+
+    function renderRekapKelas() {
+      const tbody = document.getElementById("bodyRekap");
+      tbody.innerHTML = "";
+
+      if (!globalData.rekapKelas || Object.keys(globalData.rekapKelas).length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400">Data rekap kelas kosong</td></tr>`;
+        return;
+      }
+
+      for (const [kelas, item] of Object.entries(globalData.rekapKelas)) {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-slate-700">${kelas}</td>
+          <td class="p-3 text-center">${item.jumlahInput || '-'}</td>
+          <td class="p-3 text-right font-bold text-indigo-600">${item.tampilan || item.persen}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function renderRingkasanSiswa() {
+      const container = document.getElementById("listRingkasanSiswa");
+      container.innerHTML = "";
+
+      if (!globalData.dataSiswa) return;
+
+      // Grouping siswa per kelas
+      const rekapSiswaPerKelas = {};
+      globalData.dataSiswa.forEach(s => {
+        const k = s.kelas || "Tanpa Kelas";
+        rekapSiswaPerKelas[k] = (rekapSiswaPerKelas[k] || 0) + 1;
+      });
+
+      for (const [kelas, jumlah] of Object.entries(rekapSiswaPerKelas)) {
+        const li = document.createElement("li");
+        li.className = "py-2.5 flex justify-between items-center";
+        li.innerHTML = `
+          <span class="font-medium text-slate-700">${kelas}</span>
+          <span class="bg-slate-100 text-slate-600 font-semibold px-2.5 py-0.5 rounded-full text-xs">${jumlah} Siswa</span>
+        `;
+        container.appendChild(li);
+      }
+    }
+
+    function filterKelas() {
+      const query = document.getElementById("searchKelas").value.toLowerCase();
+      const rows = document.querySelectorAll("#bodyRekap tr");
+      rows.forEach(row => {
+        const namaKelas = row.cells[0]?.innerText.toLowerCase() || "";
+        row.style.display = namaKelas.includes(query) ? "" : "none";
+      });
+    }
+
+    // Auto load saat halaman dibuka
+    window.onload = loadData;
+  </script>
+</body>
+</html>
