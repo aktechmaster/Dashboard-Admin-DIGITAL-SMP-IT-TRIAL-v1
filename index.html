@@ -3,175 +3,286 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - Aplikasi DIGITAL</title>
-  <!-- Tailwind CSS CDN -->
+  <title>Admin Dashboard Full - Aplikasi DIGITAL</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-10">
 
   <!-- TOP NAVBAR -->
-  <header class="bg-indigo-900 text-white shadow-md px-6 py-4 flex justify-between items-center">
+  <header class="bg-indigo-900 text-white shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-3">
       <div class="bg-indigo-600 p-2 rounded-lg font-bold">AD</div>
-      <h1 class="text-xl font-bold tracking-wide">Aplikasi Master DIGITAL - Admin Panel</h1>
+      <div>
+        <h1 class="text-xl font-bold tracking-wide">Aplikasi Master DIGITAL</h1>
+        <p class="text-xs text-indigo-200">Panel Kontrol Database Admin</p>
+      </div>
     </div>
-    <button onclick="loadData()" class="bg-indigo-700 hover:bg-indigo-600 px-4 py-2 rounded-lg text-sm transition font-medium flex items-center gap-2">
-      🔄 Refresh Data
-    </button>
+    <div class="flex items-center gap-3">
+      <span id="statStatus" class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">Connecting...</span>
+      <button onclick="loadData()" class="bg-indigo-700 hover:bg-indigo-600 px-4 py-2 rounded-lg text-sm transition font-medium">🔄 Refresh</button>
+    </div>
   </header>
 
   <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto p-6 space-y-6">
 
-    <!-- STATISTIC CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-sm font-semibold text-slate-500">Total User Guru</p>
-        <h3 id="statGuru" class="text-3xl font-extrabold text-indigo-900 mt-1">...</h3>
+    <!-- METRIC STATS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-xs font-semibold text-slate-500">RATA-RATA KEHADIRAN</p>
+        <h3 id="statRataRata" class="text-2xl font-extrabold text-emerald-600 mt-1">0%</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-sm font-semibold text-slate-500">Total Siswa Terdaftar</p>
-        <h3 id="statSiswa" class="text-3xl font-extrabold text-indigo-900 mt-1">...</h3>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-xs font-semibold text-slate-500">PERSENTASE PENGISIAN</p>
+        <h3 id="statPersenIsi" class="text-2xl font-extrabold text-indigo-600 mt-1">0%</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-sm font-semibold text-slate-500">Total Rombel Kelas</p>
-        <h3 id="statKelas" class="text-3xl font-extrabold text-indigo-900 mt-1">...</h3>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-xs font-semibold text-slate-500">TOTAL SISWA</p>
+        <h3 id="statSiswa" class="text-2xl font-extrabold text-slate-800 mt-1">0</h3>
       </div>
-      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-        <p class="text-sm font-semibold text-slate-500">Status Database</p>
-        <span id="statStatus" class="inline-block mt-2 px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">Connecting...</span>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <p class="text-xs font-semibold text-slate-500">TOTAL GURU & STAF</p>
+        <h3 id="statGuru" class="text-2xl font-extrabold text-slate-800 mt-1">0</h3>
       </div>
     </div>
 
-    <!-- MAIN MONITORING SECTION -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- TAB NAVIGATION BAR -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 flex gap-2 overflow-x-auto">
+      <button onclick="switchTab('rekap')" id="tab-rekap" class="tab-btn bg-indigo-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">📊 Rekap Kelas</button>
+      <button onclick="switchTab('siswa')" id="tab-siswa" class="tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition">👥 Data Siswa</button>
+      <button onclick="switchTab('guru')" id="tab-guru" class="tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition">👨‍🏫 Biodata Guru</button>
+      <button onclick="switchTab('jadwal')" id="tab-jadwal" class="tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition">📅 Jadwal Mengajar</button>
+    </div>
 
-      <!-- TABEL REKAP KELAS (2 Cols) -->
-      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-bold text-slate-800">📊 Rekapitulasi Kelas</h2>
-          <input type="text" id="searchKelas" onkeyup="filterKelas()" placeholder="Cari kelas..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-48 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse" id="tableRekap">
-            <thead>
-              <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
-                <th class="p-3">Nama Kelas</th>
-                <th class="p-3 text-center">Jumlah Input</th>
-                <th class="p-3 text-right">Persentase</th>
-              </tr>
-            </thead>
-            <tbody class="text-sm divide-y divide-slate-100" id="bodyRekap">
-              <tr><td colspan="3" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- TAB 1: REKAP KELAS -->
+    <div id="content-rekap" class="tab-content bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-slate-800">📊 Rekapitulasi Kelas & Kehadiran</h2>
+        <input type="text" onkeyup="filterTable('tableRekap', this.value)" placeholder="Cari Kelas..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-48">
       </div>
-
-      <!-- RINGKASAN DATA SISWA (1 Col) -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-        <h2 class="text-lg font-bold text-slate-800 mb-4">👥 Rincian Siswa Per Kelas</h2>
-        <div class="overflow-y-auto max-h-[350px]">
-          <ul id="listRingkasanSiswa" class="divide-y divide-slate-100 text-sm">
-            <li class="py-2 text-slate-400">Memuat data siswa...</li>
-          </ul>
-        </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse" id="tableRekap">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
+              <th class="p-3">Kelas</th>
+              <th class="p-3 text-center">Jumlah Isi (Jurnal)</th>
+              <th class="p-3 text-center">Total Pertemuan Sem II</th>
+              <th class="p-3 text-right">Rata-Rata Kehadiran</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm divide-y divide-slate-100" id="bodyRekap">
+            <tr><td colspan="4" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
+          </tbody>
+        </table>
       </div>
+    </div>
 
+    <!-- TAB 2: DATA SISWA -->
+    <div id="content-siswa" class="tab-content hidden bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-slate-800">👥 Data Induk Siswa</h2>
+        <input type="text" onkeyup="filterTable('tableSiswa', this.value)" placeholder="Cari Nama/NISN/Kelas..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-64">
+      </div>
+      <div class="overflow-x-auto max-h-[500px]">
+        <table class="w-full text-left border-collapse" id="tableSiswa">
+          <thead class="sticky top-0 bg-slate-50 shadow-sm">
+            <tr class="text-xs text-slate-500 uppercase border-b border-slate-200">
+              <th class="p-3">Kelas</th>
+              <th class="p-3">Nama Siswa</th>
+              <th class="p-3">NISN / NIS</th>
+              <th class="p-3">L/P</th>
+              <th class="p-3">TTL</th>
+              <th class="p-3">Nama Ayah</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm divide-y divide-slate-100" id="bodySiswa">
+            <tr><td colspan="6" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: BIODATA GURU -->
+    <div id="content-guru" class="tab-content hidden bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-slate-800">👨‍🏫 Biodata Guru & Staf</h2>
+        <input type="text" onkeyup="filterTable('tableGuru', this.value)" placeholder="Cari Guru..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-sm w-48">
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse" id="tableGuru">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase">
+              <th class="p-3">Nama Lengkap</th>
+              <th class="p-3">Jabatan</th>
+              <th class="p-3">Wali Kelas</th>
+              <th class="p-3">Pembina Ekstra</th>
+              <th class="p-3">NIP / NUPTK</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm divide-y divide-slate-100" id="bodyGuru">
+            <tr><td colspan="5" class="p-4 text-center text-slate-400">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 4: JADWAL MENGAJAR -->
+    <div id="content-jadwal" class="tab-content hidden bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+      <h2 class="text-lg font-bold text-slate-800 mb-4">📅 Jadwal Mengajar Guru</h2>
+      <div id="containerJadwal" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <p class="text-slate-400 text-sm">Memuat data jadwal...</p>
+      </div>
     </div>
 
   </main>
 
   <!-- JAVASCRIPT FETCH INTEGRATION -->
   <script>
-    // ⚠️ GANTI URL INI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT KAMU
+    // ⚠️ GANTI DENGAN URL EXEC WEB APP KAMU
     const API_URL = "https://script.google.com/macros/s/AKfycbxjOtLl18ZvhzJnvGYGBiOki7UmjjeinUdFecOtBVqYgY6BrgVvMXgZKHNRouSoJgA2ew/exec";
 
     let globalData = {};
 
     async function loadData() {
-      document.getElementById("statStatus").className = "inline-block mt-2 px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full";
-      document.getElementById("statStatus").innerText = "Syncing...";
+      const statusEl = document.getElementById("statStatus");
+      statusEl.className = "px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full";
+      statusEl.innerText = "Syncing...";
 
       try {
         const response = await fetch(API_URL);
         globalData = await response.json();
 
-        // Render Dashboard Metrics & Tables
+        // Render Semua Modul
         renderMetrics();
         renderRekapKelas();
-        renderRingkasanSiswa();
+        renderSiswa();
+        renderGuru();
+        renderJadwal();
 
-        document.getElementById("statStatus").className = "inline-block mt-2 px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full";
-        document.getElementById("statStatus").innerText = "Online";
+        statusEl.className = "px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full";
+        statusEl.innerText = "Online";
       } catch (error) {
         console.error("Error fetching data:", error);
-        document.getElementById("statStatus").className = "inline-block mt-2 px-3 py-1 bg-rose-100 text-rose-800 text-xs font-bold rounded-full";
-        document.getElementById("statStatus").innerText = "Error API";
+        statusEl.className = "px-3 py-1 bg-rose-100 text-rose-800 text-xs font-bold rounded-full";
+        statusEl.innerText = "Error API";
       }
     }
 
     function renderMetrics() {
-      document.getElementById("statGuru").innerText = globalData.users ? globalData.users.length : 0;
+      if (globalData.ringkasanRekap) {
+        document.getElementById("statRataRata").innerText = globalData.ringkasanRekap.totalRataRata || "0%";
+        document.getElementById("statPersenIsi").innerText = globalData.ringkasanRekap.persenIsi || "0%";
+      }
       document.getElementById("statSiswa").innerText = globalData.dataSiswa ? globalData.dataSiswa.length : 0;
-      document.getElementById("statKelas").innerText = globalData.rekapKelas ? Object.keys(globalData.rekapKelas).length : 0;
+      document.getElementById("statGuru").innerText = globalData.biodata ? Object.keys(globalData.biodata).length : 0;
     }
 
     function renderRekapKelas() {
       const tbody = document.getElementById("bodyRekap");
       tbody.innerHTML = "";
 
-      if (!globalData.rekapKelas || Object.keys(globalData.rekapKelas).length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-400">Data rekap kelas kosong</td></tr>`;
-        return;
-      }
+      if (!globalData.rekapKelas) return;
 
       for (const [kelas, item] of Object.entries(globalData.rekapKelas)) {
         const tr = document.createElement("tr");
         tr.className = "hover:bg-slate-50 transition";
         tr.innerHTML = `
           <td class="p-3 font-semibold text-slate-700">${kelas}</td>
-          <td class="p-3 text-center">${item.jumlahInput || '-'}</td>
+          <td class="p-3 text-center">${item.jumlahInput || '0'}</td>
+          <td class="p-3 text-center">${item.totalPertemuan || '0'}</td>
           <td class="p-3 text-right font-bold text-indigo-600">${item.tampilan || item.persen}</td>
         `;
         tbody.appendChild(tr);
       }
     }
 
-    function renderRingkasanSiswa() {
-      const container = document.getElementById("listRingkasanSiswa");
-      container.innerHTML = "";
+    function renderSiswa() {
+      const tbody = document.getElementById("bodySiswa");
+      tbody.innerHTML = "";
 
       if (!globalData.dataSiswa) return;
 
-      // Grouping siswa per kelas
-      const rekapSiswaPerKelas = {};
       globalData.dataSiswa.forEach(s => {
-        const k = s.kelas || "Tanpa Kelas";
-        rekapSiswaPerKelas[k] = (rekapSiswaPerKelas[k] || 0) + 1;
-      });
-
-      for (const [kelas, jumlah] of Object.entries(rekapSiswaPerKelas)) {
-        const li = document.createElement("li");
-        li.className = "py-2.5 flex justify-between items-center";
-        li.innerHTML = `
-          <span class="font-medium text-slate-700">${kelas}</span>
-          <span class="bg-slate-100 text-slate-600 font-semibold px-2.5 py-0.5 rounded-full text-xs">${jumlah} Siswa</span>
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-indigo-900">${s.kelas || '-'}</td>
+          <td class="p-3 font-medium text-slate-800">${s.nama || '-'}</td>
+          <td class="p-3 text-slate-500">${s.nisn || '-'} / ${s.nis || '-'}</td>
+          <td class="p-3">${s.jk || '-'}</td>
+          <td class="p-3 text-slate-500">${s.ttl || '-'}</td>
+          <td class="p-3 text-slate-600">${s.namaAyah || '-'}</td>
         `;
-        container.appendChild(li);
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderGuru() {
+      const tbody = document.getElementById("bodyGuru");
+      tbody.innerHTML = "";
+
+      if (!globalData.biodata) return;
+
+      for (const [nama, bio] of Object.entries(globalData.biodata)) {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-slate-800">${nama}</td>
+          <td class="p-3 text-slate-600">${bio.jabatan || '-'}</td>
+          <td class="p-3 text-indigo-700 font-medium">${bio.waliKelas || '-'}</td>
+          <td class="p-3 text-slate-600">${bio.pembinaEkstra || '-'}</td>
+          <td class="p-3 text-slate-400 text-xs">${bio.nip || bio.nuptk || '-'}</td>
+        `;
+        tbody.appendChild(tr);
       }
     }
 
-    function filterKelas() {
-      const query = document.getElementById("searchKelas").value.toLowerCase();
-      const rows = document.querySelectorAll("#bodyRekap tr");
+    function renderJadwal() {
+      const container = document.getElementById("containerJadwal");
+      container.innerHTML = "";
+
+      if (!globalData.jadwalMengajar) return;
+
+      for (const [guru, hariObj] of Object.entries(globalData.jadwalMengajar)) {
+        const card = document.createElement("div");
+        card.className = "bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2";
+        
+        let htmlHari = "";
+        for (const [hari, kelasArr] of Object.entries(hariObj)) {
+          if (kelasArr.length > 0) {
+            htmlHari += `<div class="text-xs"><span class="font-bold text-indigo-800">${hari}:</span> ${kelasArr.join(', ')}</div>`;
+          }
+        }
+
+        card.innerHTML = `
+          <h4 class="font-bold text-slate-800 border-b border-slate-200 pb-1">${guru}</h4>
+          ${htmlHari || '<p class="text-xs text-slate-400">Tidak ada jadwal</p>'}
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    // TAB SWITCHING
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = "tab-btn text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition";
+      });
+
+      document.getElementById(`content-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      activeBtn.className = "tab-btn bg-indigo-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition";
+    }
+
+    // SEARCH FILTER
+    function filterTable(tableId, query) {
+      const q = query.toLowerCase();
+      const rows = document.querySelectorAll(`#${tableId} tbody tr`);
       rows.forEach(row => {
-        const namaKelas = row.cells[0]?.innerText.toLowerCase() || "";
-        row.style.display = namaKelas.includes(query) ? "" : "none";
+        row.style.display = row.innerText.toLowerCase().includes(q) ? "" : "none";
       });
     }
 
-    // Auto load saat halaman dibuka
     window.onload = loadData;
   </script>
 </body>
